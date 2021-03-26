@@ -1,0 +1,24 @@
+TODO: Reddit
+ - PREPPING: convert to csv, clean and parse data, change the time in human format #Francesca 
+ - 
+ - PLOTTING: 
+ - - weekly frequnecy 
+ - - monthly frequency 
+ 
+ - Deeper analysis on the Titles. "Hold", "to the Moon", WSB Lingo. NLTK? 
+ - Deeper analysis on Authors. Most active (frequency of submissions), who receives the most likes/ups (quality). 
+ 
+ - Extras:
+ - Look at twitter
+ - ML
+
+TODO: GME Stock #Marco
+ - download the stock data, datareader  
+ - look at market (bull/bear, rational/irrational investors)
+ RESEARCH:
+ - Influence of others events (Stops, news, restrictions on trading platforms (e.g. robinhood)) 
+ check pre-market, compare with reddit activity 
+
+TODO: correlation 
+ - find correlation 
+ - draw conclusions 

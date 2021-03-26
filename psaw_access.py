@@ -1,92 +1,87 @@
 from psaw import PushshiftAPI
 import datetime as dt
 import logging as log
+import csv
+
+
+# -- -- -- Methods for fetching Data from Pushshift API -- -- -- #
 
 api = PushshiftAPI()
-start_time =dt.datetime(2020, 12, 20)   #(2020, 12, 20) --> (2021, 1, 20)
-end_time = dt.datetime(2021,  2, 18)     #(2021, 1, 20) --> (2021,  2, 1) --> (2021,  2, 18)
+start_time = dt.datetime(2020, 12, 20) 
+end_time = dt.datetime(2021,  2, 19)
 
-""" submissions = api.search_submissions(
-                            after=int(start_time.timestamp()),
-                            before=int(end_time.timestamp()),
-                            subreddit='wallstreetbets',
-                            filter=['url','author', 'title', 'subreddit'], 
-                            #limit= 100
-                            ) """
-
-
-def throttle_requests(start_time, end_time, time_delta): 
+# .TXT
+# Accesses Pushshift API
+# splits the time frame (%start_time and %end_time) in blocks of %time_delta days 
+# Creates a separate .txt file for each block
+# Each .txt files contains the Reddit submissions containing the word "GME" in the title
+def throttle_requests_totxt(start_time, end_time, time_delta):
     tmp_etime = start_time + time_delta
 
-    while tmp_etime<end_time: 
+    while tmp_etime < end_time:
         submissions = api.search_submissions(
                             after=int(start_time.timestamp()),
                             before=int(tmp_etime.timestamp()),
                             subreddit='wallstreetbets',
-                            filter=['url','author', 'title', 'subreddit'], 
-                            #limit= 100
+                            filter=['url', 'author', 'title',
+                                'subreddit', 'created_utc'],
+                            # limit= 100
                             )
-        #mysubs = []
-        with open(f'wsb_{start_time}_{tmp_etime}.txt', 'w') as f: 
-            for sub in submissions: 
+        with open(f'wsb_{start_time}_{tmp_etime}.txt', 'w') as f:
+            for sub in submissions:
                 wrds = sub.title.split()
-                if "GME" not in wrds: continue 
-                else: 
-                    #mysubs.append(sub)
+                if "GME" not in wrds: continue
+                else:
                     log.warning(f"Sub title: {sub.title}")
                     f.write(f"{sub}\n")
-            f.flush()            
+            f.flush()
 
         start_time = tmp_etime
         tmp_etime = start_time + time_delta
     return "Done"
 
-x = throttle_requests(start_time, end_time, dt.timedelta(10)) #10 day cycle
-print(x)
-
-""" print(dt.timedelta(10))
-print(start_time)
-print(start_time + dt.timedelta(10))
-print(end_time>end_time) """
+# # Uncomment Here below to download all .TXT files for the time period specifcied above
+# x = throttle_requests_totxt(start_time, end_time, dt.timedelta(10)) #10 day cycle
+# print(x)
 
 
+# CSV 
+# Accesses Pushshift API
+# splits the time frame (%start_time and %end_time) in blocks of %time_delta days 
+# Creates a separate .csv file for each block
+# Each .csv files contains the Reddit submissions containing the word "GME" in the title
+def throttle_requests_tocsv(start_time, end_time, time_delta):
+    tmp_etime = start_time + time_delta
 
-"""
-mysubs = []
-with open('wsb_all.txt', 'w') as f: 
-    for sub in submissions: 
-        wrds = sub.title.split()
-        if "GME" not in wrds: continue 
-        else: 
-            mysubs.append(sub)
-            log.warning(f"Sub title: {sub.title}")
-            f.write(f"{sub}\n")
+    while tmp_etime < end_time:
+        submissions = api.search_submissions(
+                            after=int(start_time.timestamp()),
+                            before=int(tmp_etime.timestamp()),
+                            subreddit='wallstreetbets',
+                            filter=['url', 'author', 'title',
+                                'subreddit', 'created_utc'],
+                            # limit= 100
+                            )
 
-log.warning("End.")
+        with open(f'wsb_{start_time}_{tmp_etime}.csv', 'w') as f: 
+            sub_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+            sub_writer.writerow(['url','author', 'title', 'subreddit'])
 
-"""
+            for sub in submissions: 
+                wrds = sub.title.split()
+                if "GME" not in wrds: continue 
+                else: 
+                    log.warning(f"Sub created_utc: {sub.created_utc}, Sub title: {sub.title}")
+                    sub_writer.writerow([sub.created_utc, sub.author, sub.title, sub.url])           
 
-#TODO: Reddit
-# - PREPPING: convert to csv, clean and parse data, change the time in human format #Francesca 
-# - 
-# - PLOTTING: 
-# - - weekly frequnecy 
-# - - monthly frequency 
-# 
-# - Deeper analysis on the Titles. "Hold", "to the Moon", WSB Lingo. NLTK? 
-# - Deeper analysis on Authors. Most active (frequency of submissions), who receives the most likes/ups (quality). 
-# 
-# - Extras:
-# - Look at twitter
-# - ML
+        start_time = tmp_etime
+        tmp_etime = start_time + time_delta
+    return "Done"
 
-#TODO: GME Stock #Marco
-# - download the stock data, datareader  
-# - look at market (bull/bear, rational/irrational investors)
-# RESEARCH:
-# - Influence of others events (Stops, news, restrictions on trading platforms (e.g. robinhood)) 
-# check pre-market, compare with reddit activity 
-#
-#TODO: correlation 
-# - find correlation 
-# - draw conclusions 
+# # Uncomment Here below to download all CSV files for the time period specifcied above
+# x = throttle_requests_tocsv(start_time, end_time, dt.timedelta(10)) #10 day cycle
+# print(x)
+        
+
+
+
