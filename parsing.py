@@ -14,6 +14,7 @@ sub_df = pd.concat([df for df in df_dict.values()]).reset_index(drop=True)
 sub_df["created_utc"] = sub_df["created_utc"].apply(lambda x: dt.datetime.fromtimestamp(int(x)).strftime("%Y-%m-%d %H:%M:%S"))
 sub_df.rename(columns={'created_utc':'created'}, inplace=True)
 
+sub_df.to_csv("sub_df.csv")
 #print(sub_df.head())
 #print(sub_df.tail())
 
@@ -32,7 +33,7 @@ plt.plot(sub_df_date_count['created'], sub_df_date_count["count"], "o-")
 plt.show()
 
 # look at number of active members 
-# look at %, diminishing returns from additional users in stock price. 
+# look at % increease/decrease, diminishing returns from additional users in stock price. 
 # (readers (buyers) != writers) 
 # still holding, look at % of posts that wrote "still holding" to see what the activity was about. 
 
