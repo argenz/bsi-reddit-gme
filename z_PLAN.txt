@@ -1,11 +1,12 @@
 TODO: Reddit
- - PREPPING: convert to csv, clean and parse data, change the time in human format #Francesca 
+ - PREPPING: convert to csv, clean and parse data, change the time in human format #Done
  - 
  - PLOTTING: 
- - - weekly frequnecy 
- - - monthly frequency 
+ - - weekly frequnecy  #DONE
+ - - monthly frequency #DONE
+ - - Plot frequencies
  
- - Deeper analysis on the Titles. "Hold", "to the Moon", WSB Lingo. NLTK? 
+ - Deeper analysis on the Titles. "Hold", "to the Moon", WSB Lingo. NLTK? #Francesca 
  - Deeper analysis on Authors. Most active (frequency of submissions), who receives the most likes/ups (quality). 
  
  - Extras:
@@ -13,12 +14,16 @@ TODO: Reddit
  - ML
 
 TODO: GME Stock #Marco
- - download the stock data, datareader  
+ - download the stock data, yahoo finance  #DONE
+ - Plot stock data (suggestion: close price and date)
  - look at market (bull/bear, rational/irrational investors)
  RESEARCH:
  - Influence of others events (Stops, news, restrictions on trading platforms (e.g. robinhood)) 
  check pre-market, compare with reddit activity 
 
 TODO: correlation 
+ - "standardise" the two graphs to plot them on the same axes.
  - find correlation 
  - draw conclusions 
+
+
