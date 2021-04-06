@@ -2,6 +2,8 @@ from psaw import PushshiftAPI
 import datetime as dt
 import logging as log
 import csv
+import pandas as pd
+import os 
 
 
 # -- -- -- Methods for fetching Data from Pushshift API -- -- -- #
@@ -59,20 +61,20 @@ def throttle_requests_tocsv(start_time, end_time, time_delta):
                             before=int(tmp_etime.timestamp()),
                             subreddit='wallstreetbets',
                             filter=['url', 'author', 'title',
-                                'subreddit', 'created_utc'],
+                                'subreddit', 'created_utc', 'id', 'score', 'upvote_ratio'],
                             # limit= 100
                             )
 
         with open(f'wsb_{start_time}_{tmp_etime}.csv', 'w') as f: 
             sub_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
-            sub_writer.writerow(['url','author', 'title', 'subreddit'])
+            sub_writer.writerow(['id', 'created_utc', 'author', 'title', 'url', 'score', 'upvote_ratio'])
 
             for sub in submissions: 
                 wrds = sub.title.split()
                 if "GME" not in wrds: continue 
                 else: 
-                    log.warning(f"Sub created_utc: {sub.created_utc}, Sub title: {sub.title}")
-                    sub_writer.writerow([sub.created_utc, sub.author, sub.title, sub.url])           
+                    log.warning(f"Sub ID:{sub.id}, Sub created_utc: {sub.created_utc}, Sub title: {sub.title[:10]}, Sub score:{sub.score}")
+                    sub_writer.writerow([sub.id, sub.created_utc, sub.author, sub.title, sub.url, sub.score, sub.upvote_ratio])           
 
         start_time = tmp_etime
         tmp_etime = start_time + time_delta
@@ -82,6 +84,18 @@ def throttle_requests_tocsv(start_time, end_time, time_delta):
 # x = throttle_requests_tocsv(start_time, end_time, dt.timedelta(10)) #10 day cycle
 # print(x)
         
+# -- -- -- -- Parsing from CSV to pandas.DataFrame -- -- -- -- #
+df_dict = {}
+for filename in os.listdir("./files"):
+    df_dict[filename] = pd.read_csv(f"./files/{filename}")
 
+sub_df = pd.concat([df for df in df_dict.values()]).reset_index(drop=True)
 
+# convert utc to normal date
+sub_df["created_utc"] = sub_df["created_utc"].apply(lambda x: dt.datetime.fromtimestamp(int(x)).strftime("%Y-%m-%d %H:%M:%S"))
+sub_df.rename(columns={'created_utc':'created'}, inplace=True)
+
+sub_df.to_csv("sub_df_new.csv")
+#print(sub_df.head())
+#print(sub_df.tail())
 
