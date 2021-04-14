@@ -17,8 +17,8 @@ sub_df_date_count = (pd.to_datetime(sub_df['created'])
        .rename_axis('created')
        .reset_index(name='count')
        .sort_values('created', ascending=False))
-plt.figure()
-plt.plot(sub_df_date_count['created'], sub_df_date_count["count"], "o-")
+# plt.figure()
+# plt.plot(sub_df_date_count['created'], sub_df_date_count["count"], "o-")
 
 # -- -- -- -- Stock Data -- -- -- -- #
 
@@ -44,7 +44,7 @@ stock_data["z_open"] = stock_data["Open"]/stock_std
 # plt.xlabel('Day')
 # plt.ylabel('z')
 # plt.legend()
-#plt.show()
+# plt.show()
 
 # warning: only plotting open prices 
 # TODO: standardise average between high and low of each day, and plot
@@ -54,8 +54,11 @@ stock_data["z_open"] = stock_data["Open"]/stock_std
 title_df = sub_df["title"].str.lower()
 title_df = title_df.str.replace(r'[^\w\s]', '')  #replace any character that is not a word or a space with nothing
 words = " ".join(title for title in title_df)
-
-wd_freq_df = pd.DataFrame(Counter(words.split()), index=[1]).transpose().reset_index().rename(columns={"index": "word", 1: "frequency"})
+wd_freq_df = pd.DataFrame(Counter(words.split()), index=[1]).transpose().reset_index().rename(columns={"index": "word", 1: "frequency"}).sort_values(by=["frequency"], ascending=False)
 
 # order per most frequent to least frequent 
 # inspect the df, remove prepositions, articles, http addresses?... 
+
+
+# WSB Lingo
+lingo_df = pd.DataFrame({"lingo": ["diamond hand", "paper hand", "stonk", "tendie", "to the moon", "jpow", "yolo"]})
