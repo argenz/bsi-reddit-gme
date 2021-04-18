@@ -95,7 +95,7 @@ sub_df = pd.concat([df for df in df_dict.values()]).reset_index(drop=True)
 sub_df["created_utc"] = sub_df["created_utc"].apply(lambda x: dt.datetime.fromtimestamp(int(x)).strftime("%Y-%m-%d %H:%M:%S"))
 sub_df.rename(columns={'created_utc':'created'}, inplace=True)
 
-sub_df.to_csv("sub_df_new.csv")
+#sub_df.to_csv("sub_df_new.csv")
 #print(sub_df.head())
 #print(sub_df.tail())
 

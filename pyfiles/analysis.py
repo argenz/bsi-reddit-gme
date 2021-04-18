@@ -6,7 +6,7 @@ import numpy as np
 import regex as re
 from collections import Counter
 
-sub_df = pd.read_csv("sub_df.csv")
+sub_df = pd.read_csv("/bsi-reddit-gme/pyfiles/sub_df.csv"")
 
 # -- -- -- -- Plot number of Subs per day -- -- -- -- #
 
@@ -28,7 +28,7 @@ end = "2021-02-19"
 interval = "1d"
 
 stock_data = get_stockdata(name, start, end, interval)
-stock_data.to_csv("gme_stock_data.csv")
+#stock_data.to_csv("gme_stock_data.csv")
 
 # -- Plot standardised price and sub count per day -- #
 
